@@ -5,6 +5,25 @@
 
 The Agentmail Python library provides convenient access to the Agentmail APIs from Python.
 
+
+## Quick Start
+
+### Installation
+
+```bash
+pip install agentmail
+```
+
+### Basic Usage
+
+```python
+from agentmail import AgentmailClient
+
+client = AgentmailClient(api_key="your-api-key")
+response = client.send_message(to="recipient@example.com", content="Hello!")
+print(response)
+```
+
 ## Table of Contents
 
 - [Installation](#installation)
