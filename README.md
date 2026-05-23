@@ -26,7 +26,20 @@ The Agentmail Python library provides convenient access to the Agentmail APIs fr
 pip install agentmail
 ```
 
-## Reference
+## Quick Start
+
+```python
+import os
+import asyncio
+from agentmail import AgentMail
+
+client = AgentMail(api_key=os.environ.get("AGENTMAIL_API_KEY"))
+
+async def main() -> None:
+    await client.inboxes.create()
+
+asyncio.run(main())
+```
 
 A full reference for this library is available [here](https://github.com/agentmail-to/agentmail-python/blob/HEAD/./reference.md).
 
@@ -57,10 +70,8 @@ client = AsyncAgentMail(
     api_key="<token>",
 )
 
-
 async def main() -> None:
     await client.inboxes.create()
-
 
 asyncio.run(main())
 ```
@@ -107,85 +118,68 @@ A request is deemed retryable when any of the following HTTP status codes is ret
 
 - [408](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/408) (Timeout)
 - [429](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429) (Too Many Requests)
-- [5XX](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500) (Internal Server Errors)
+- [5xx](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500) (Server Error)
 
-Use the `max_retries` request option to configure this behavior.
+If a retry limit is configured (default: 2) the request will be retried until the limit is reached.
 
-```python
-client.inboxes.create(..., request_options={
-    "max_retries": 1
-})
-```
+### Retries Configuration
 
-### Timeouts
-
-The SDK defaults to a 60 second timeout. You can configure this with a timeout option at the client or request level.
+You can configure the number of retries and the delay between retries on any client:
 
 ```python
 from agentmail import AgentMail
 
-client = AgentMail(..., timeout=20.0)
+client = AgentMail(
+    api_key="<token>",
+    max_retries=0,  # default: 2
+)
+```
 
-# Override timeout for a specific method
-client.inboxes.create(..., request_options={
-    "timeout_in_seconds": 1
-})
+The SDK uses an exponential backoff strategy with jitter. For more information on the details of the strategy see the [code](./agentmail/core/client.py).
+
+### Timeouts
+
+The default timeout is 60 seconds. You can configure it on the client:
+
+```python
+from agentmail import AgentMail
+
+client = AgentMail(
+    api_key="<token>",
+    timeout=20.0,  # default: 60
+)
+```
+
+Or on a per-request basis:
+
+```python
+from agentmail import AgentMail
+
+client = AgentMail(api_key="<token>")
+client.inboxes.list(timeout=5.0)
 ```
 
 ### Custom Client
 
-You can override the `httpx` client to customize it for your use-case. Some common use-cases include support for proxies
-and transports.
+You can customize the client by passing your own `httpx.Client` or `httpx.AsyncClient` to the `http_client` parameter:
 
 ```python
 import httpx
 from agentmail import AgentMail
 
 client = AgentMail(
-    ...,
-    httpx_client=httpx.Client(
-        proxy="http://my.test.proxy.example.com",
-        transport=httpx.HTTPTransport(local_address="0.0.0.0"),
+    api_key="<token>",
+    http_client=httpx.Client(
+        proxy="http://my代理人.com:1234",
+        timeout=5.0,
     ),
 )
 ```
 
 ## Contributing
 
-While we value open-source contributions to this SDK, this library is generated programmatically.
-Additions made directly to this library would have to be moved over to our generation code,
-otherwise they would be overwritten upon the next generated release. Feel free to open a PR as
-a proof of concept, but know that we will not be able to merge it as-is. We suggest opening
-an issue first to discuss with us!
+Contributions are welcome! Please see the contributing guide for more details.
 
-On the other hand, contributions to the README are always very welcome!
 ## Websockets
 
-The SDK supports both sync and async websocket connections for real-time, low-latency communication. Sockets can be created using the `connect` method, which returns a context manager. 
-You can either iterate through the returned `SocketClient` to process messages as they arrive, or attach handlers to respond to specific events.
-
-```python
-from agentmail import AgentMail
-
-client = AgentMail(...)
-
-# Connect to the websocket (Sync)
-with client.websockets.connect(...) as socket:
-    # Iterate over the messages as they arrive
-    for message in socket:
-        print(message)
-
-    # Or, attach handlers to specific events
-    socket.on(EventType.MESSAGE, lambda message: print("received message", message))
-
-import asyncio
-from agentmail import AsyncAgentMail
-
-client = AsyncAgentMail(...)
-
-# Connect to the websocket (Async)
-async with client.websockets.connect(...) as socket:
-    async for message in socket:
-        print(message)
-```
-
+Websocket support is available for real-time communication. For more details, see the [Websockets documentation](https://docs.agentmail.to).
