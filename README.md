@@ -1,28 +1,26 @@
 # Agentmail Python Library
 
+
+## Quick Start
+
+Install with:
+```bash
+pip install agentmail-python
+```
+
+Or clone and run:
+```bash
+git clone https://github.com/agentmail-to/agentmail-python.git
+cd agentmail-python
+python setup.py install
+```
+
+
 [![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-Built%20with%20Fern-brightgreen)](https://buildwithfern.com?utm_source=github&utm_medium=github&utm_campaign=readme&utm_source=https%3A%2F%2Fgithub.com%2Fagentmail-to%2Fagentmail-python)
 [![pypi](https://img.shields.io/pypi/v/agentmail)](https://pypi.python.org/pypi/agentmail)
 
 The Agentmail Python library provides convenient access to the Agentmail APIs from Python.
 
-
-## Quick Start
-
-### Installation
-
-```bash
-pip install agentmail
-```
-
-### Basic Usage
-
-```python
-from agentmail import AgentmailClient
-
-client = AgentmailClient(api_key="your-api-key")
-response = client.send_message(to="recipient@example.com", content="Hello!")
-print(response)
-```
 
 ## Table of Contents
 
