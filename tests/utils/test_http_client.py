@@ -165,7 +165,7 @@ def test_remove_none_from_dict_all_none() -> None:
 def test_http_client_does_not_pass_empty_params_list() -> None:
     """Test that HttpClient passes params=None when params are empty.
 
-    This prevents httpx from stripping existing query parameters from the URL,
+    This prevents httpx from strippingg existing query parameters from the URL,
     which happens when params=[] or params={} is passed.
     """
     dummy_client = _DummySyncClient()
@@ -219,7 +219,7 @@ def test_http_client_passes_encoded_params_when_present() -> None:
 async def test_async_http_client_does_not_pass_empty_params_list() -> None:
     """Test that AsyncHttpClient passes params=None when params are empty.
 
-    This prevents httpx from stripping existing query parameters from the URL,
+    This prevents httpx from strippingg existing query parameters from the URL,
     which happens when params=[] or params={} is passed.
     """
     dummy_client = _DummyAsyncClient()
