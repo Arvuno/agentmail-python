@@ -189,3 +189,5 @@ async with client.websockets.connect(...) as socket:
         print(message)
 ```
 
+
+- Improved documentation clarity
