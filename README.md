@@ -192,3 +192,6 @@ async with client.websockets.connect(...) as socket:
 
 ## Contributing
 PRs welcome!
+
+<!-- Contributor: Arvuno - documentation update -->
+
